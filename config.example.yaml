@@ -1,0 +1,28 @@
+# WTP Disruption Monitor — configuration
+# ----------------------------------------
+# ntfy_topic:
+#   Your unique ntfy.sh topic name. Subscribe to it in the ntfy app on your phone.
+#   Make it something personal so strangers don't stumble onto it,
+#   e.g. "wtp-monitor-initials-2026".
+#
+# poll_interval_seconds:
+#   How often to check the RSS feed (in seconds). 300 = every 5 minutes.
+#
+# keywords:
+#   List of strings to match against the title and description of each RSS item.
+#   Matching is case-insensitive. An item only triggers a notification if at
+#   least one keyword is found.
+#   Leave the list EMPTY to receive notifications for ALL disruptions:
+#     keywords: []
+
+ntfy_topic: "CHANGE_ME"
+
+poll_interval_seconds: 300
+
+keywords:
+  - "M1"
+  - "metro m1"
+  - "linia m1"
+  - "M2"
+  - "metro m2"
+  - "linia m2"
