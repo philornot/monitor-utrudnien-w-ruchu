@@ -1,0 +1,17 @@
+[Unit]
+Description=WTP Disruption Monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=EDIT_USER
+WorkingDirectory=EDIT_PROJECT_PATH
+ExecStart=EDIT_PROJECT_PATH/.venv/bin/python wtp_monitor.py
+Restart=on-failure
+RestartSec=30s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
