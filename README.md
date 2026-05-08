@@ -42,7 +42,7 @@ utrudnieniach.
 ### 5. Uzupełnij plik serwisu
 
 ```bash
-nano m1-monitor.service
+nano wtp-monitor.service
 ```
 
 | Placeholder         | Co wpisać                                  |
@@ -53,17 +53,17 @@ nano m1-monitor.service
 ### 6. Zarejestruj i uruchom serwis
 
 ```bash
-sudo systemctl link $(realpath m1-monitor.service)
-sudo systemctl enable --now m1-monitor
+sudo systemctl link $(realpath wtp-monitor.service)
+sudo systemctl enable --now wtp-monitor
 ```
 
 ### Przydatne komendy
 
 ```bash
-sudo systemctl status m1-monitor    # status
-journalctl -u m1-monitor -f         # logi na żywo
-sudo systemctl restart m1-monitor   # restart (np. po zmianie config.yaml)
-sudo systemctl stop m1-monitor      # zatrzymanie
+sudo systemctl status wtp-monitor    # status
+journalctl -u wtp-monitor -f         # logi na żywo
+sudo systemctl restart wtp-monitor   # restart (np. po zmianie config.yaml)
+sudo systemctl stop wtp-monitor      # zatrzymanie
 ```
 
 ---
@@ -103,7 +103,7 @@ Adjust `keywords` as needed. An empty list (`keywords: []`) sends notifications 
 ### 5. Fill in the service file
 
 ```bash
-nano m1-monitor.service
+nano wtp-monitor.service
 ```
 
 | Placeholder         | Value                                          |
@@ -114,15 +114,15 @@ nano m1-monitor.service
 ### 6. Register and start the service
 
 ```bash
-sudo systemctl link $(realpath m1-monitor.service)
-sudo systemctl enable --now m1-monitor
+sudo systemctl link $(realpath wtp-monitor.service)
+sudo systemctl enable --now wtp-monitor
 ```
 
 ### Useful commands
 
 ```bash
-sudo systemctl status m1-monitor    # check status
-journalctl -u m1-monitor -f         # live logs
-sudo systemctl restart m1-monitor   # restart (e.g. after editing config.yaml)
-sudo systemctl stop m1-monitor      # stop
+sudo systemctl status wtp-monitor    # check status
+journalctl -u wtp-monitor -f         # live logs
+sudo systemctl restart wtp-monitor   # restart (e.g. after editing config.yaml)
+sudo systemctl stop wtp-monitor      # stop
 ```
