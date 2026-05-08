@@ -28,7 +28,12 @@ python3 -m venv .venv
 
 ### 4. Skonfiguruj monitor
 
-Otwórz `config.yaml` i ustaw `ntfy_topic` na unikalną nazwę, np. `wtp-monitor-inicjaly-2026`.
+```bash
+cp config.example.yaml config.yaml
+nano config.yaml
+```
+
+Ustaw `ntfy_topic` na unikalną nazwę, np. `wtp-monitor-inicjaly-2026`.
 W apce ntfy na telefonie: **+** → wpisz tę samą nazwę.
 
 Dostosuj `keywords` do swoich potrzeb. Pusta lista (`keywords: []`) oznacza powiadomienia o **wszystkich**
@@ -37,7 +42,7 @@ utrudnieniach.
 ### 5. Uzupełnij plik serwisu
 
 ```bash
-nano wtp-monitor.service
+nano m1-monitor.service
 ```
 
 | Placeholder         | Co wpisać                                  |
@@ -48,17 +53,17 @@ nano wtp-monitor.service
 ### 6. Zarejestruj i uruchom serwis
 
 ```bash
-sudo systemctl link $(realpath wtp-monitor.service)
-sudo systemctl enable --now wtp-monitor
+sudo systemctl link $(realpath m1-monitor.service)
+sudo systemctl enable --now m1-monitor
 ```
 
 ### Przydatne komendy
 
 ```bash
-sudo systemctl status wtp-monitor    # status
-journalctl -u wtp-monitor -f         # logi na żywo
-sudo systemctl restart wtp-monitor   # restart (np. po zmianie config.yaml)
-sudo systemctl stop wtp-monitor      # zatrzymanie
+sudo systemctl status m1-monitor    # status
+journalctl -u m1-monitor -f         # logi na żywo
+sudo systemctl restart m1-monitor   # restart (np. po zmianie config.yaml)
+sudo systemctl stop m1-monitor      # zatrzymanie
 ```
 
 ---
@@ -85,7 +90,12 @@ python3 -m venv .venv
 
 ### 4. Configure the monitor
 
-Open `config.yaml` and set `ntfy_topic` to a unique name, e.g. `wtp-monitor-initials-2026`.
+```bash
+cp config.example.yaml config.yaml
+nano config.yaml
+```
+
+Set `ntfy_topic` to a unique name, e.g. `wtp-monitor-initials-2026`.
 In the ntfy app: **+** → enter the exact same topic name.
 
 Adjust `keywords` as needed. An empty list (`keywords: []`) sends notifications for **all** disruptions.
@@ -93,7 +103,7 @@ Adjust `keywords` as needed. An empty list (`keywords: []`) sends notifications 
 ### 5. Fill in the service file
 
 ```bash
-nano wtp-monitor.service
+nano m1-monitor.service
 ```
 
 | Placeholder         | Value                                          |
@@ -104,15 +114,15 @@ nano wtp-monitor.service
 ### 6. Register and start the service
 
 ```bash
-sudo systemctl link $(realpath wtp-monitor.service)
-sudo systemctl enable --now wtp-monitor
+sudo systemctl link $(realpath m1-monitor.service)
+sudo systemctl enable --now m1-monitor
 ```
 
 ### Useful commands
 
 ```bash
-sudo systemctl status wtp-monitor    # check status
-journalctl -u wtp-monitor -f         # live logs
-sudo systemctl restart wtp-monitor   # restart (e.g. after editing config.yaml)
-sudo systemctl stop wtp-monitor      # stop
+sudo systemctl status m1-monitor    # check status
+journalctl -u m1-monitor -f         # live logs
+sudo systemctl restart m1-monitor   # restart (e.g. after editing config.yaml)
+sudo systemctl stop m1-monitor      # stop
 ```
