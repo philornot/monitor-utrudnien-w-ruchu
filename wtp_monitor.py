@@ -13,6 +13,8 @@ Designed to run as a long-lived systemd service. Handles SIGTERM gracefully.
 """
 
 import hashlib
+import html
+import html.parser
 import json
 import logging
 import signal
@@ -255,8 +257,8 @@ def send_notification(item: dict, ntfy_topic: str) -> None:
         f"https://ntfy.sh/{ntfy_topic}",
         json={
             "topic": ntfy_topic,
-            "title": "🚨 WTP — utrudnienia!",
-            "message": item["title"],
+            "title": f"🚨 {item['title']}",          # tytuł artykułu jako nagłówek
+            "message": _format_notification_message(item),
             "priority": "high",
             "tags": ["warszawa", "transport", "warning"],
             "click": item["link"],
@@ -266,6 +268,64 @@ def send_notification(item: dict, ntfy_topic: str) -> None:
     response.raise_for_status()
     log.info("Notification sent: %s", item["title"])
 
+# ---------------------------------------------------------------------------
+# Notification formatting
+# ---------------------------------------------------------------------------
+
+class _HTMLStripper(html.parser.HTMLParser):
+    """Minimal HTML parser that discards all tags and collects plain text."""
+
+    def __init__(self):
+        super().__init__()
+        self._parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        stripped = data.strip()
+        if stripped:
+            self._parts.append(stripped)
+
+    def get_text(self) -> str:
+        """Return the accumulated plain text joined by newlines."""
+        return "\n".join(self._parts)
+
+
+def _strip_html(raw: str) -> str:
+    """Strip HTML tags from *raw* and unescape HTML entities.
+
+    Args:
+        raw: A string that may contain HTML markup.
+
+    Returns:
+        Plain text with tags removed and entities decoded (e.g. ``&amp;`` → ``&``).
+    """
+    stripper = _HTMLStripper()
+    stripper.feed(raw)
+    return html.unescape(stripper.get_text())
+
+
+def _format_notification_message(item: dict, max_desc_chars: int = 300) -> str:
+    """Build a clean, human-readable notification body from an RSS item.
+
+    Args:
+        item: A parsed RSS item dict (see :func:`fetch_rss_items`).
+        max_desc_chars: Maximum number of characters taken from the description
+            before it is truncated with an ellipsis. Keeps ntfy previews tidy.
+
+    Returns:
+        A formatted string ready to be used as the ntfy ``message`` field.
+    """
+    parts: list[str] = []
+
+    description = _strip_html(item.get("description", ""))
+    if description:
+        if len(description) > max_desc_chars:
+            description = description[:max_desc_chars].rstrip() + "…"
+        parts.append(description)
+
+    if item.get("pub_date"):
+        parts.append(f"🕐 {item['pub_date']}")
+
+    return "\n\n".join(parts) if parts else item["title"]
 
 # ---------------------------------------------------------------------------
 # Single poll cycle
