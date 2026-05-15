@@ -244,7 +244,10 @@ def matches_keywords(item: dict, keywords: list[str]) -> bool:
 # ---------------------------------------------------------------------------
 
 def send_notification(item: dict, ntfy_topic: str) -> None:
-    """Send a push notification via ntfy.sh.
+    """Send a push notification via ntfy.sh using HTTP headers.
+
+    Uses the ntfy header-based API instead of a JSON body, which avoids
+    Content-Type negotiation issues and Unicode escaping in the payload.
 
     Args:
         item: The RSS item that triggered the alert.
@@ -253,15 +256,17 @@ def send_notification(item: dict, ntfy_topic: str) -> None:
     Raises:
         requests.RequestException: If the ntfy.sh request fails.
     """
+    message = _format_notification_message(item)
+    title = f"🚨 {item['title']}"
+
     response = requests.post(
         f"https://ntfy.sh/{ntfy_topic}",
-        json={
-            "topic": ntfy_topic,
-            "title": f"🚨 {item['title']}",          # tytuł artykułu jako nagłówek
-            "message": _format_notification_message(item),
-            "priority": "high",
-            "tags": ["warszawa", "transport", "warning"],
-            "click": item["link"],
+        data=message.encode("utf-8"),
+        headers={
+            "Title": title.encode("utf-8"),
+            "Priority": "high",
+            "Tags": "warszawa,transport,warning",
+            "Click": item["link"],
         },
         timeout=10,
     )

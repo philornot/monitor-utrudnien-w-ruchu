@@ -230,12 +230,10 @@ class TestSendNotification:
         with patch("wtp_monitor.requests.post", return_value=mock_response) as mock_post:
             wtp_monitor.send_notification(SAMPLE_ITEM, "my-topic")
 
-        payload = mock_post.call_args.kwargs["json"]
-        assert payload["topic"] == "my-topic"
-        assert payload["priority"] == "high"
-        assert payload["click"] == SAMPLE_ITEM["link"]
-        # Title should contain the article title, not a generic string.
-        assert "M1" in payload["title"]
+        headers = mock_post.call_args.kwargs["headers"]
+        assert b"M1" in headers["Title"]
+        assert headers["Priority"] == "high"
+        assert headers["Click"] == SAMPLE_ITEM["link"]
 
     def test_http_error_propagates(self) -> None:
         import requests as req
